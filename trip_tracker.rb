@@ -1,13 +1,4 @@
-inputs = [
-  'Driver Dan',
-  'Driver Alex',
-  'Driver Bob',
-  'Trip Dan 07:15 07:45 17.3',
-  'Trip Dan 06:12 06:32 12.9',
-  'Trip Alex 12:01 13:16 42.0'
-]
-
-# Tracks
+# Registers new drivers and logs trips
 class TripTracker
   ENTRY_TYPES = %w(Driver Trip).freeze
 
@@ -98,6 +89,7 @@ class TripTracker
   end
 end
 
+# Represents driver
 class Driver
   attr_reader :name, :trips
   def initialize(name)
@@ -110,16 +102,21 @@ class Driver
   end
 
   def total_distance
-    return 0 unless @trips.length > 0
-    @trips.reduce(0) { |total, next_trip| total + next_trip.distance }
+    return 0 if @trips.empty?
+    @trips.reduce(0) do |total_distance, next_trip|
+      total_distance + next_trip.distance
+    end
   end
 
   def average_speed
-    return nil unless @trips.length > 0
-    @trips.reduce(0) { |total, next_trip| total + next_trip.speed }.to_f / @trips.length
+    return nil if @trips.empty?
+    @trips.reduce(0) do |total_distance, next_trip|
+      total_distance + next_trip.speed
+    end.to_f / @trips.length
   end
 end
 
+# Represents trip taken by driver
 class Trip
   attr_reader :start_time, :stop_time, :distance, :speed
   def initialize(start_time, stop_time, distance, speed)
@@ -132,7 +129,7 @@ end
 
 trip_tracker = TripTracker.new
 
-inputs.each do |input|
+IO.foreach('input.txt') do |input|
   trip_tracker.process_input(input)
 end
 
