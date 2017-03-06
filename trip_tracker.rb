@@ -1,3 +1,6 @@
+require './driver'
+require './trip'
+
 # Registers new drivers and logs trips
 class TripTracker
   ENTRY_TYPES = %w(Driver Trip).freeze
@@ -7,14 +10,12 @@ class TripTracker
   end
 
   def process_input(input_str)
-    entry_array = parse_input(input_str)
+    command, *data = parse_input(input_str)
 
-    entry_type, entry_data = process_entry(entry_array)
-
-    if 'Driver' == entry_type
-      create_driver(entry_data.first)
-    elsif 'Trip' == entry_type
-      log_trip(entry_data)
+    if 'Driver' == command
+      create_driver(data.first)
+    elsif 'Trip' == command
+      log_trip(data)
     else
       puts "Cannot process entry of type #{entry_type}."
     end
@@ -43,8 +44,12 @@ class TripTracker
     input.split
   end
 
-  def create_driver(data)
-    @drivers << Driver.new(data)
+  def create_driver(name)
+    if fetch_driver(name)
+      puts "Driver #{name} already exists."
+      return
+    end
+    @drivers << Driver.new(name)
   end
 
   def log_trip(data)
@@ -64,12 +69,7 @@ class TripTracker
   end
 
   def fetch_driver(name)
-    driver = @drivers.detect { |d| name == d.name }
-    if driver
-      driver
-    else
-      puts "Could not find driver #{name}."
-    end
+    @drivers.detect { |driver| name == driver.name }
   end
 
   def get_duration(start_time, stop_time)
@@ -88,49 +88,3 @@ class TripTracker
     end
   end
 end
-
-# Represents driver
-class Driver
-  attr_reader :name, :trips
-  def initialize(name)
-    @name = name
-    @trips = []
-  end
-
-  def add_trip(start_time, stop_time, distance, speed)
-    @trips << Trip.new(start_time, stop_time, distance, speed)
-  end
-
-  def total_distance
-    return 0 if @trips.empty?
-    @trips.reduce(0) do |total_distance, next_trip|
-      total_distance + next_trip.distance
-    end
-  end
-
-  def average_speed
-    return nil if @trips.empty?
-    @trips.reduce(0) do |total_distance, next_trip|
-      total_distance + next_trip.speed
-    end.to_f / @trips.length
-  end
-end
-
-# Represents trip taken by driver
-class Trip
-  attr_reader :start_time, :stop_time, :distance, :speed
-  def initialize(start_time, stop_time, distance, speed)
-    @start_time = start_time
-    @stop_time = stop_time
-    @distance = distance
-    @speed = speed
-  end
-end
-
-trip_tracker = TripTracker.new
-
-IO.foreach('input.txt') do |input|
-  trip_tracker.process_input(input)
-end
-
-trip_tracker.print_driving_report

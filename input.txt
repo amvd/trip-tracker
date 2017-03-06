@@ -4,3 +4,16 @@ Driver Bob
 Trip Dan 07:15 07:45 17.3
 Trip Dan 06:12 06:32 12.9
 Trip Alex 12:01 13:16 42.0
+Driver Sam
+Trip Alex 00:01 12:05 100.8
+Trip Sam 14:03 15:05 400.2
+Trip Sam 15:40 15:41 5
+Trip Sam 15:43 16:20 30.2
+Trip Bob 03:18 3:25 0.1
+Trip Dan 08:23 09:01 11.6
+Trip Bob 06:23 06:35 5.1
+Driver Jean
+Trip Jean 06:45 06:57 3.3
+Trip Jean 07:14 07:36 4.4
+Trip Jean 02:10 14:57 126.2
+Trip Jean 07:04 08:17 81.0
