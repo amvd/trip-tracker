@@ -9,8 +9,8 @@ class TripTracker
     @drivers = []
   end
 
-  def process_input(input_str)
-    command, *data = parse_input(input_str)
+  def process_input_array(input_array)
+    command, *data = input_array
 
     if 'Driver' == command
       create_driver(data.first)
@@ -35,15 +35,6 @@ class TripTracker
 
   private
 
-  def process_entry(entry_array)
-    entry_type, *entry_data = entry_array
-    return entry_type, entry_data
-  end
-
-  def parse_input(input)
-    input.split
-  end
-
   def create_driver(name)
     if fetch_driver(name)
       puts "Driver #{name} already exists."
@@ -57,9 +48,14 @@ class TripTracker
 
     driver = fetch_driver(driver_name)
 
-    start = trip_info[0]
-    stop = trip_info[1]
-    distance = trip_info[2].to_f
+    unless driver
+      puts "Unable to find driver #{driver_name}."
+      return
+    end
+
+    start, stop, distance = trip_info
+    distance = distance.to_f
+
     duration = get_duration(start, stop)
     speed = distance / duration
 
