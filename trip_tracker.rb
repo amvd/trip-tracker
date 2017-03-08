@@ -9,8 +9,8 @@ class TripTracker
     @drivers = []
   end
 
-  def process_input_array(input_array)
-    command, *data = input_array
+  def process_input_string(input_string)
+    command, *data = convert_string_input_to_array(input_string)
 
     if 'Driver' == command
       create_driver(data.first)
@@ -34,6 +34,10 @@ class TripTracker
   end
 
   private
+
+  def convert_string_input_to_array(input_string)
+    input_string.split
+  end
 
   def create_driver(name)
     if fetch_driver(name)
